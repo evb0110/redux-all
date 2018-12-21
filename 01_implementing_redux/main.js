@@ -1,8 +1,13 @@
 const listeners = [];
 let state = {
-  counter: 3
+  counter: -11
 };
 
+const ACTIONS = {
+  INIT: 'INIT',
+  INC: 'INC',
+  DEC: 'DEC',
+}
 
 subscribe(updateView);
 
@@ -10,26 +15,13 @@ updateView(); //c Passing initial value
 
 // Listen to click events
 document.querySelector('#inc').onclick =
-  () => dispatch('INC');
+  () => dispatch(ACTIONS.INC);
 document.querySelector('#dec').onclick =
-  () => dispatch('DEC');
+  () => dispatch(ACTIONS.DEC);
 
 // Function to update view (this might be React or Angular in a real app)
 function updateView() {
   document.querySelector('#counter').innerText = state.counter;
-}
-
-// reducer is supposed to be supplied by the user of Redux
-function reducer(state, action) {
-  switch (action) {
-    case 'INC':
-      return Object.assign({}, state, { counter: state.counter + 1 });
-    case 'DEC':
-      return Object.assign({}, state, { counter: state.counter - 1 });
-    case 'INIT':
-    default:
-      return state;
-  }
 }
 
 function dispatch(action) {
@@ -44,4 +36,27 @@ function dispatch(action) {
 
 function subscribe(callback) {
   listeners.push(callback);
+}
+
+
+// reducer is supposed to be supplied by the user of Redux
+//c REDUCER PROVIDES THE NEW STATE
+//c DEPENDING ON THE CURRENT STATE AND
+//c THE TAKEN ACTION
+function reducer(state, action) {
+  switch (action) {
+    case ACTIONS.INC:
+      return {
+        ...state, 
+        counter: state.counter + 1 
+      };
+    case ACTIONS.DEC:
+      return {
+        ...state, 
+        counter: state.counter - 1 
+      };
+    case ACTIONS.INIT:
+    default:
+      return state;
+  }
 }
